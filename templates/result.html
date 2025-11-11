@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Screening Result</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #dceaff, #f0f4f8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: #ffffff;
+            padding: 50px 60px;
+            border-radius: 15px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+            text-align: center;
+            width: 520px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 18px 35px rgba(0,0,0,0.2);
+        }
+        .score {
+            font-size: 60px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .good { color: #28a745; }
+        .average { color: #ffc107; }
+        .poor { color: #dc3545; }
+
+        ul.keywords {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        ul.keywords li {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 14px;
+            background: #e0f0ff;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #007bff;
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+        ul.keywords li:hover {
+            background: #cce6ff;
+            transform: scale(1.05);
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 30px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+
+        /* Spinner and analyzing text */
+        #loading-container {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            flex-direction: column;
+            align-items: center;
+        }
+        #loading {
+            margin: 0 auto 15px;
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        #loading-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }
+    </style>
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+            const card = document.querySelector(".card");
+
+            const loadingContainer = document.createElement("div");
+            loadingContainer.id = "loading-container";
+            loadingContainer.style.display = "flex";
+
+            const spinner = document.createElement("div");
+            spinner.id = "loading";
+
+            const text = document.createElement("div");
+            text.id = "loading-text";
+            text.textContent = "Analyzing Resume & Job Description...";
+
+            loadingContainer.appendChild(spinner);
+            loadingContainer.appendChild(text);
+            card.prepend(loadingContainer);
+
+            card.style.opacity = "0.3";
+
+            // Show spinner for 2 seconds before displaying result
+            setTimeout(() => {
+                loadingContainer.style.display = "none";
+                card.style.opacity = "1";
+            }, 2000);
+        });
+    </script>
+</head>
+<body>
+    <div class="card">
+        <h2>Resume Screening Result</h2>
+        <div class="score {{ color_class }}">{{ score }}%</div>
+        <p>{{ message }}</p>
+
+        {% if keywords %}
+        <h3>Suggested Skills / Keywords:</h3>
+        <ul class="keywords">
+            {% for word in keywords %}
+            <li>{{ word }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <a href="/">← Analyze Another Resume</a>
+    </div>
+</body>
+</html>
